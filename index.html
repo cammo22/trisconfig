@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuratore Preventivi — Foto &amp; Video Matrimonio</title>
+<style>
+/* ─────────────────────────────────────────────────────────────
+   SISTEMA DI DESIGN — ogni colore, misura e font sta qui.
+   Non scrivere valori a mano nel resto del foglio.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --carta:#fbfaf8;
+  --card:#ffffff;
+  --bordo:#e6e3dd;
+  --bordo-forte:#cfcac1;
+  --inchiostro:#1c1b19;
+  --inchiostro-tenue:#6b6660;
+  --accento:#1c1b19;
+  --accento-vivo:#8a7048;
+  --errore:#b3261e;
+  --ok:#2f6b3f;
+  --r-s:8px;
+  --r-m:14px;
+  --r-l:20px;
+  --sp-1:6px;
+  --sp-2:10px;
+  --sp-3:16px;
+  --sp-4:24px;
+  --sp-5:36px;
+  --sp-6:56px;
+  --titolo:"Cormorant Garamond","EB Garamond",Garamond,Georgia,"Times New Roman",serif;
+  --testo:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ombra:0 1px 2px rgba(28,27,25,.04), 0 8px 24px rgba(28,27,25,.05);
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--carta);
+  color:var(--inchiostro);
+  font-family:var(--testo);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+h1,h2,h3,.serif{font-family:var(--titolo);font-weight:600;letter-spacing:.01em}
+
+/* Testata */
+header.testata{
+  text-align:center;
+  padding:var(--sp-6) var(--sp-3) var(--sp-4);
+  max-width:var(--max);margin:0 auto;
+}
+header.testata .marchio{
+  font-family:var(--titolo);
+  font-size:13px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--inchiostro-tenue);
+}
+header.testata h1{
+  font-size:clamp(30px,5vw,46px);
+  margin:var(--sp-2) 0 var(--sp-2);
+  line-height:1.15;
+}
+header.testata p{margin:0 auto;max-width:620px;color:var(--inchiostro-tenue);font-size:14px}
+
+main{max-width:var(--max);margin:0 auto;padding:0 var(--sp-3) var(--sp-6)}
+
+/* Etichetta di sezione (la "pillola") */
+.pillola{
+  display:flex;align-items:center;justify-content:center;
+  margin:var(--sp-5) 0 var(--sp-3);
+}
+.pillola span{
+  font-family:var(--titolo);
+  font-size:17px;
+  background:var(--card);
+  border:1px solid var(--bordo);
+  border-radius:999px;
+  padding:7px 20px;
+  box-shadow:var(--ombra);
+}
+
+/* Riquadri */
+.riquadro{
+  background:var(--card);
+  border:1px solid var(--bordo);
+  border-radius:var(--r-l);
+  padding:var(--sp-4);
+  box-shadow:var(--ombra);
+}
+
+/* Griglia a due colonne */
+.griglia{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+@media(max-width:760px){.griglia{grid-template-columns:1fr}}
+
+/* Campi del modulo */
+.campo{display:flex;flex-direction:column;gap:var(--sp-1)}
+.campo label{font-family:var(--titolo);font-size:17px}
+.campo label .obb{color:var(--accento-vivo)}
+.campo input,.campo textarea,.campo select{
+  font-family:var(--testo);font-size:14px;color:var(--inchiostro);
+  background:var(--carta);
+  border:1px solid var(--bordo);
+  border-radius:var(--r-s);
+  padding:11px 12px;
+  width:100%;
+  transition:border-color .15s, box-shadow .15s;
+}
+.campo textarea{min-height:44px;resize:vertical}
+.campo input:focus,.campo textarea:focus,.campo select:focus{
+  outline:none;border-color:var(--inchiostro);box-shadow:0 0 0 3px rgba(28,27,25,.07);
+}
+.campo input::placeholder,.campo textarea::placeholder{color:#a9a49c}
+.campo.errore input,.campo.errore textarea{border-color:var(--errore);box-shadow:0 0 0 3px rgba(179,38,30,.08)}
+.msg-errore{color:var(--errore);font-size:12.5px;min-height:0;display:none}
+.campo.errore .msg-errore{display:block}
+
+/* Pacchetti base */
+.pacchetti{display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap}
+.pacchetto{
+  display:flex;align-items:center;gap:var(--sp-2);
+  background:var(--card);border:1px solid var(--bordo);border-radius:999px;
+  padding:12px 20px;cursor:pointer;box-shadow:var(--ombra);
+  transition:border-color .15s, transform .1s;
+  min-width:210px;
+}
+.pacchetto:hover{border-color:var(--bordo-forte)}
+.pacchetto:has(input:checked){border-color:var(--inchiostro)}
+.pacchetto .nome{font-family:var(--titolo);font-size:19px;flex:1}
+.pacchetto .prezzo{
+  font-size:12px;color:var(--inchiostro-tenue);
+  background:var(--carta);border:1px solid var(--bordo);border-radius:999px;padding:3px 10px;white-space:nowrap;
+}
+.nota-inclusi{text-align:center;color:var(--inchiostro-tenue);font-size:13.5px;margin:var(--sp-3) auto 0;max-width:760px}
+.nota-inclusi b{color:var(--inchiostro);font-weight:600}
+
+/* Voci selezionabili (extra / partner) */
+.voce{
+  display:flex;align-items:flex-start;gap:var(--sp-2);
+  background:var(--card);border:1px solid var(--bordo);border-radius:var(--r-m);
+  padding:14px var(--sp-3);cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.voce:hover{border-color:var(--bordo-forte)}
+.voce:has(input:checked){border-color:var(--inchiostro);background:#fdfcfa}
+.voce .testo{flex:1;min-width:0}
+.voce .titolo{font-family:var(--titolo);font-size:17px;line-height:1.25}
+.voce .desc{font-size:12.5px;color:var(--inchiostro-tenue);margin-top:3px}
+.voce .prezzo{font-family:var(--titolo);font-size:18px;white-space:nowrap;padding-left:var(--sp-2)}
+
+/* Caselle e radio */
+input[type=checkbox],input[type=radio]{
+  appearance:none;-webkit-appearance:none;
+  width:17px;height:17px;flex:0 0 17px;margin:2px 0 0;
+  border:1px solid var(--bordo-forte);background:var(--card);cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+input[type=checkbox]{border-radius:4px}
+input[type=radio]{border-radius:50%}
+input[type=checkbox]:checked,input[type=radio]:checked{background:var(--inchiostro);border-color:var(--inchiostro)}
+input[type=checkbox]:checked::after{
+  content:"";display:block;width:4px;height:8px;margin:2px auto 0;
+  border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(43deg);
+}
+input[type=radio]:checked::after{
+  content:"";display:block;width:6px;height:6px;border-radius:50%;background:var(--card);margin:4.5px auto;
+}
+input:focus-visible{outline:2px solid var(--inchiostro);outline-offset:2px}
+
+/* Operatori */
+.op-blocco{background:var(--card);border:1px solid var(--bordo);border-radius:var(--r-m);padding:var(--sp-3)}
+.op-blocco h3{margin:0 0 var(--sp-3);font-size:18px}
+.op-righe{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+.op-fisso{
+  display:flex;align-items:center;
+  background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r-s);
+  padding:11px 12px;font-size:14px;color:var(--inchiostro-tenue);
+}
+
+/* Servizi partner */
+.nota-piccola{font-size:12px;color:var(--inchiostro-tenue);text-align:center;margin-top:var(--sp-3)}
+
+/* Totale */
+.totale{
+  margin-top:var(--sp-5);
+  background:var(--card);border:1px solid var(--bordo);border-radius:var(--r-m);
+  padding:var(--sp-4);
+}
+.totale .etichetta{font-family:var(--titolo);font-size:19px;color:var(--inchiostro-tenue)}
+.totale .cifra{font-family:var(--titolo);font-size:40px;line-height:1.1;margin-top:2px}
+.totale .dettaglio{margin-top:var(--sp-3);border-top:1px solid var(--bordo);padding-top:var(--sp-3);font-size:13.5px}
+.totale .riga{display:flex;justify-content:space-between;gap:var(--sp-3);padding:3px 0;color:var(--inchiostro-tenue)}
+.totale .riga span:last-child{white-space:nowrap;color:var(--inchiostro)}
+
+/* Bottoni */
+.bottone{
+  font-family:var(--titolo);font-size:16px;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--inchiostro);color:#fff;border:1px solid var(--inchiostro);
+  border-radius:var(--r-s);padding:15px 34px;cursor:pointer;
+  transition:opacity .15s, transform .08s;
+}
+.bottone:hover{opacity:.88}
+.bottone:active{transform:translateY(1px)}
+.bottone.chiaro{background:var(--card);color:var(--inchiostro);border-color:var(--bordo-forte);letter-spacing:.08em;font-size:15px;padding:11px 18px}
+.azioni{display:flex;justify-content:flex-end;margin-top:var(--sp-4)}
+.postilla{text-align:center;color:var(--inchiostro-tenue);font-size:12px;margin-top:var(--sp-4);line-height:1.6}
+
+/* Barra fissa in basso */
+.barra{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  background:rgba(251,250,248,.93);backdrop-filter:blur(8px);
+  border-top:1px solid var(--bordo);
+  padding:10px var(--sp-3);
+}
+.barra .dentro{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);
+}
+.barra .cifra{font-family:var(--titolo);font-size:26px}
+.barra .voce-barra{font-size:12px;color:var(--inchiostro-tenue)}
+
+/* Riepilogo (finestra) */
+.velo{
+  position:fixed;inset:0;z-index:40;background:rgba(28,27,25,.42);
+  display:none;align-items:center;justify-content:center;padding:var(--sp-3);
+}
+.velo.aperto{display:flex}
+.finestra{
+  background:var(--card);border-radius:var(--r-l);border:1px solid var(--bordo);
+  max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:var(--sp-5);
+  box-shadow:0 24px 60px rgba(28,27,25,.22);
+}
+.finestra h2{margin:0 0 var(--sp-1);font-size:28px}
+.finestra .sottotitolo{color:var(--inchiostro-tenue);font-size:13.5px;margin-bottom:var(--sp-4)}
+.riepilogo{border-top:1px solid var(--bordo);padding-top:var(--sp-3);font-size:14px}
+.riepilogo h4{font-family:var(--titolo);font-size:17px;margin:var(--sp-3) 0 var(--sp-1);font-weight:600}
+.riepilogo .riga{display:flex;justify-content:space-between;gap:var(--sp-3);padding:3px 0}
+.riepilogo .riga span:last-child{white-space:nowrap}
+.riepilogo .totale-riga{
+  display:flex;justify-content:space-between;margin-top:var(--sp-3);
+  border-top:1px solid var(--bordo);padding-top:var(--sp-3);
+  font-family:var(--titolo);font-size:24px;
+}
+.bottoni-finestra{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-4)}
+.bottoni-finestra .bottone{flex:1 1 auto}
+.avviso{
+  margin-top:var(--sp-3);font-size:12.5px;color:var(--ok);display:none;
+}
+.avviso.visibile{display:block}
+
+/* Stampa: esce solo il riepilogo */
+@media print{
+  body{padding:0;background:#fff}
+  header.testata,main,.barra{display:none!important}
+  .velo{position:static;display:block;background:none;padding:0}
+  .finestra{box-shadow:none;border:none;max-height:none;max-width:none;padding:0}
+  .bottoni-finestra,.avviso{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <div class="marchio" id="marchio">DaProd Studio</div>
+  <h1>Configuratore Preventivi</h1>
+  <p>Componi il servizio foto e video del tuo matrimonio: scegli il pacchetto base, aggiungi gli extra e il totale si aggiorna in tempo reale.</p>
+</header>
+
+<main>
+  <form id="modulo" novalidate>
+
+    <div class="pillola"><span>Dati evento</span></div>
+    <div class="riquadro">
+      <div class="griglia" id="campi-evento"></div>
+    </div>
+
+    <div class="pillola"><span>Scegli il pacchetto base</span></div>
+    <div class="pacchetti" id="pacchetti"></div>
+    <p class="nota-inclusi" id="nota-base"></p>
+
+    <div class="pillola"><span>Extra aggiuntivi</span></div>
+    <div class="griglia" id="extra"></div>
+
+    <div class="pillola"><span>Operatori aggiuntivi</span></div>
+    <p class="nota-inclusi" id="nota-operatori"></p>
+    <div class="griglia" id="operatori" style="margin-top:var(--sp-3)"></div>
+
+    <div class="pillola"><span>Servizi partner</span></div>
+    <div class="griglia" id="partner"></div>
+    <p class="nota-piccola">Servizi proposti in collaborazione con partner esterni. Disponibilità e dettagli saranno confermati in fase di preventivo.</p>
+
+    <div class="totale">
+      <div class="etichetta">Totale preventivo</div>
+      <div class="cifra" id="totale-cifra">€ 0</div>
+      <div class="dettaglio" id="totale-dettaglio"></div>
+    </div>
+
+    <div class="azioni">
+      <button type="submit" class="bottone">Invia il preventivo</button>
+    </div>
+
+    <p class="postilla">
+      Il prezzo mostrato è indicativo.<br>
+      Il configuratore non tiene conto di eventuali promozioni stagionali o condizioni particolari sui singoli pacchetti.<br><br>
+      Inviando la richiesta, un nostro addetto analizzerà nel dettaglio la vostra esigenza e vi ricontatterà.
+    </p>
+  </form>
+</main>
+
+<div class="barra">
+  <div class="dentro">
+    <div>
+      <div class="voce-barra" id="barra-voci">Nessun extra selezionato</div>
+      <div class="cifra" id="barra-cifra">€ 0</div>
+    </div>
+    <button type="button" class="bottone" id="barra-invia">Invia il preventivo</button>
+  </div>
+</div>
+
+<div class="velo" id="velo" role="dialog" aria-modal="true" aria-labelledby="titolo-riepilogo">
+  <div class="finestra">
+    <h2 id="titolo-riepilogo" class="serif">Riepilogo preventivo</h2>
+    <div class="sottotitolo" id="riepilogo-sottotitolo"></div>
+    <div class="riepilogo" id="riepilogo"></div>
+    <div class="bottoni-finestra">
+      <button type="button" class="bottone" id="btn-email">Invia via email</button>
+      <button type="button" class="bottone chiaro" id="btn-copia">Copia</button>
+      <button type="button" class="bottone chiaro" id="btn-scarica">Scarica .txt</button>
+      <button type="button" class="bottone chiaro" id="btn-stampa">Stampa / PDF</button>
+      <button type="button" class="bottone chiaro" id="btn-chiudi">Chiudi</button>
+    </div>
+    <div class="avviso" id="avviso"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   LISTINO — l'unico posto dove stanno prezzi, voci e descrizioni.
+   Aggiungere una voce = aggiungere una riga qui.
+   `pacchetti` dice per quali pacchetti base la voce ha senso.
+   ═══════════════════════════════════════════════════════════════ */
+const STUDIO = {
+  nome: "DaProd Studio",
+  email: "dapprod22@gmail.com"   // ← destinatario del preventivo
+};
+
+const LISTINO = {
+  pacchetti: [
+    { id:"fv", nome:"Foto + Video", prezzo:2500, etichetta:"da € 2500",
+      base:"Include: album 60×40 cm, modello da scegliere, 2 MiniBook 16×20, film 4K.",
+      inclusi:"Nel pacchetto <b>Foto + Video</b> sono già inclusi 4 operatori (2 fotografi + 2 video). Qui puoi aggiungere solo quelli extra.",
+      operatori:["foto","video"] },
+    { id:"foto", nome:"Solo Foto", prezzo:1500, etichetta:"€ 1500",
+      base:"Include: album 60×40 cm, modello da scegliere, 2 MiniBook 16×20.",
+      inclusi:"Nel pacchetto <b>Solo Foto</b> sono già inclusi 2 fotografi. Qui puoi aggiungere solo quelli extra.",
+      operatori:["foto"] },
+    { id:"video", nome:"Solo Video", prezzo:1500, etichetta:"€ 1500",
+      base:"Include: film 4K, consegna digitale.",
+      inclusi:"Nel pacchetto <b>Solo Video</b> sono già inclusi 2 operatori video. Qui puoi aggiungere solo quelli extra.",
+      operatori:["video"] }
+  ],
+
+  extra: [
+    { id:"drone",         nome:"Riprese drone",                        prezzo:400,  desc:"Riprese aeree per l'intera durata dell'evento.", pacchetti:["fv","video"] },
+    { id:"seconda",       nome:"Seconda squadra",                      prezzo:300,  desc:"Operatore video + fotografo aggiuntivi.",         pacchetti:["fv"] },
+    { id:"proiezione",    nome:"Proiezione in sala",                   prezzo:500,  desc:"Proiezione in location/sala a scelta tra marryoke o trailer.", pacchetti:["fv","video"] },
+    { id:"prew-base",     nome:"Pre-wedding base",                     prezzo:500,  desc:"Anteprima della durata di mezza giornata in Campania.", pacchetti:["fv","foto","video"] },
+    { id:"prew-giorno",   nome:"Pre-wedding giornata intera",          prezzo:800,  desc:"Anteprima di un giorno intero con destinazione a scelta (città italiane).", pacchetti:["fv","foto","video"] },
+    { id:"prew-viaggio",  nome:"Pre-wedding viaggio (2 giorni)",       prezzo:1500, desc:"Shooting di due giorni in località italiane/estere. Spese a carico dei clienti.", pacchetti:["fv","foto","video"] },
+    { id:"foto-famiglia", nome:"Foto famiglia + consegna in location", prezzo:300,  desc:"Foto famiglia consegnate in giornata, inserite in cornici in legno 15×20 cm (30 pezzi).", pacchetti:["fv","foto"] },
+    { id:"reportage",     nome:"Fotoreportage stampato per invitati",  prezzo:300,  desc:"Foto spontanee per gli invitati: stampate al momento e incorniciate in cartoncino.", pacchetti:["fv","foto"] },
+    { id:"post-wedding",  nome:"Post-wedding",                         prezzo:350,  desc:"Shooting aggiuntivo dopo il matrimonio con gli abiti da cerimonia.", pacchetti:["fv","foto","video"] },
+    { id:"album-20x30",   nome:"Album aggiuntivo anteprima 20×30",     prezzo:400,  desc:"Album extra dedicato all'anteprima, misura 20×30.", pacchetti:["fv","foto"] },
+    { id:"qr-gallery",    nome:"QR code + gallery foto (blog live)",   prezzo:200,  desc:"A fine giornata carichiamo le foto e le condividiamo agli invitati tramite QR code (consultazione e download).", pacchetti:["fv","foto"] },
+    { id:"streaming",     nome:"Consegna video in streaming",          prezzo:200,  desc:"Consegna del film tramite piattaforma streaming privata.", pacchetti:["fv","video"] },
+    { id:"poster-carta",  nome:"Poster 50×70",                         prezzo:50,   desc:"Stampa su carta fotografica premium, misura 50×70 cm.", pacchetti:["fv","foto"] },
+    { id:"poster-forex",  nome:"Poster 50×70 su Forex",                prezzo:100,  desc:"Stampa su pannello in Forex, misura 50×70 cm.", pacchetti:["fv","foto"] },
+    { id:"poster-tela",   nome:"Poster 50×70 su Tela",                 prezzo:150,  desc:"Stampa su tela, misura 50×70 cm.", pacchetti:["fv","foto"] },
+    { id:"cornice",       nome:"Cornice digitale",                     prezzo:700,  desc:"Cornice digitale premium per rivivere i momenti migliori.", pacchetti:["fv","foto","video"] }
+  ],
+
+  operatori: [
+    { id:"foto",  nome:"Operatori Fotografici extra", prezzo:250, max:5 },
+    { id:"video", nome:"Operatori Video extra",       prezzo:250, max:5 }
+  ],
+
+  partner: [
+    { id:"taycan",   nome:"Auto di lusso sposi – Porsche Taycan",    prezzo:500, desc:"Servizio auto con conducente (dettagli e disponibilità su conferma)." },
+    { id:"levante",  nome:"Auto di lusso sposi – Maserati Levante",  prezzo:500, desc:"Servizio auto con conducente (dettagli e disponibilità su conferma)." },
+    { id:"selfie2",  nome:"Piattaforma Selfie 360 – 2 ore",          prezzo:300, desc:"Piattaforma 360 con video dinamici e setup incluso." },
+    { id:"selfie4",  nome:"Piattaforma Selfie 360 – 4 ore",          prezzo:500, desc:"Piattaforma 360 per l'intera serata, video dinamici e setup incluso." },
+    { id:"specchio", nome:"Specchio Magico – 200 stampe incluse",    prezzo:600, desc:"Postazione selfie con stampa immediata (200 stampe incluse)." }
+  ],
+
+  campi: [
+    { id:"sposi",    label:"Nome degli sposi",         obb:true,  segno:"Es. Giuseppe & Alessandra" },
+    { id:"email",    label:"Email di riferimento",     obb:true,  segno:"Es. nome@email.com", tipo:"email" },
+    { id:"telefono", label:"Numero di telefono valido",obb:true,  segno:"Es. +39 333 123 4567", tipo:"tel" },
+    { id:"data",     label:"Data dell'evento",         obb:true,  tipo:"date" },
+    { id:"location", label:"Location (nome)",          obb:true,  segno:"Es. Villa / Ristorante / Chiesa…" },
+    { id:"localita", label:"Località dell'evento",     obb:true,  segno:"Es. Napoli, Caserta, Salerno…" },
+    { id:"durata",   label:"Durata evento (ore o giorni)", obb:true, segno:"Es. 12 ore / 2 giorni" },
+    { id:"note",     label:"Note (opzionale)",         obb:false, segno:"Es. rito civile, doppia location…", tipo:"textarea" }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   STATO
+   ═══════════════════════════════════════════════════════════════ */
+const stato = {
+  pacchetto: "fv",
+  extra: new Set(),
+  partner: new Set(),
+  operatori: { foto:0, video:0 },
+  dati: {}
+};
+
+const CHIAVE = "daprod-preventivo-bozza";
+const euro = n => "€ " + n.toLocaleString("it-IT");
+const el = (t,c) => { const n=document.createElement(t); if(c) n.className=c; return n; };
+const pacchettoCorrente = () => LISTINO.pacchetti.find(p => p.id === stato.pacchetto);
+
+/* ── Dati evento ────────────────────────────────────────────── */
+function disegnaCampi(){
+  const dove = document.getElementById("campi-evento");
+  dove.innerHTML = "";
+  LISTINO.campi.forEach(c => {
+    const box = el("div","campo");
+    box.id = "campo-" + c.id;
+    const lab = el("label");
+    lab.htmlFor = "in-" + c.id;
+    lab.innerHTML = c.label + (c.obb ? ' <span class="obb">*</span>' : "");
+    const input = c.tipo === "textarea" ? el("textarea") : el("input");
+    if(c.tipo && c.tipo !== "textarea") input.type = c.tipo;
+    input.id = "in-" + c.id;
+    input.name = c.id;
+    if(c.segno) input.placeholder = c.segno;
+    if(c.tipo === "date") input.min = new Date().toISOString().slice(0,10);
+    input.addEventListener("input", () => {
+      stato.dati[c.id] = input.value;
+      box.classList.remove("errore");
+      salva();
+    });
+    const err = el("div","msg-errore");
+    err.textContent = "Campo obbligatorio";
+    box.append(lab, input, err);
+    if(c.tipo === "textarea") box.style.gridColumn = "auto";
+    dove.appendChild(box);
+  });
+}
+
+/* ── Pacchetti base ─────────────────────────────────────────── */
+function disegnaPacchetti(){
+  const dove = document.getElementById("pacchetti");
+  dove.innerHTML = "";
+  LISTINO.pacchetti.forEach(p => {
+    const lab = el("label","pacchetto");
+    const r = el("input"); r.type="radio"; r.name="pacchetto"; r.value=p.id;
+    r.checked = stato.pacchetto === p.id;
+    r.addEventListener("change", () => { stato.pacchetto = p.id; potaSelezioni(); disegnaTutto(); salva(); });
+    const nome = el("div","nome"); nome.textContent = p.nome;
+    const pr = el("div","prezzo"); pr.textContent = p.etichetta;
+    lab.append(r, nome, pr);
+    dove.appendChild(lab);
+  });
+  document.getElementById("nota-base").textContent = pacchettoCorrente().base;
+  document.getElementById("nota-operatori").innerHTML = pacchettoCorrente().inclusi;
+}
+
+/* Toglie extra/operatori che non valgono più per il pacchetto scelto */
+function potaSelezioni(){
+  const p = pacchettoCorrente();
+  LISTINO.extra.forEach(e => { if(!e.pacchetti.includes(p.id)) stato.extra.delete(e.id); });
+  LISTINO.operatori.forEach(o => { if(!p.operatori.includes(o.id)) stato.operatori[o.id] = 0; });
+}
+
+/* ── Voce con casella (extra e partner) ─────────────────────── */
+function voce(item, insieme){
+  const lab = el("label","voce");
+  const c = el("input"); c.type="checkbox"; c.checked = insieme.has(item.id);
+  c.addEventListener("change", () => {
+    c.checked ? insieme.add(item.id) : insieme.delete(item.id);
+    aggiornaTotale(); salva();
+  });
+  const testo = el("div","testo");
+  const t = el("div","titolo"); t.textContent = item.nome;
+  const d = el("div","desc");  d.textContent = item.desc || "";
+  testo.append(t, d);
+  const pr = el("div","prezzo"); pr.textContent = euro(item.prezzo);
+  lab.append(c, testo, pr);
+  return lab;
+}
+
+function disegnaExtra(){
+  const dove = document.getElementById("extra");
+  dove.innerHTML = "";
+  LISTINO.extra
+    .filter(e => e.pacchetti.includes(stato.pacchetto))
+    .forEach(e => dove.appendChild(voce(e, stato.extra)));
+}
+
+function disegnaPartner(){
+  const dove = document.getElementById("partner");
+  dove.innerHTML = "";
+  LISTINO.partner.forEach(p => dove.appendChild(voce(p, stato.partner)));
+}
+
+/* ── Operatori ──────────────────────────────────────────────── */
+function disegnaOperatori(){
+  const dove = document.getElementById("operatori");
+  dove.innerHTML = "";
+  const attivi = pacchettoCorrente().operatori;
+  LISTINO.operatori.filter(o => attivi.includes(o.id)).forEach(o => {
+    const box = el("div","op-blocco");
+    const h = el("h3","serif"); h.textContent = o.nome;
+    const righe = el("div","op-righe");
+
+    const c1 = el("div","campo");
+    const l1 = el("label"); l1.textContent = `Numero (max ${o.max})`; l1.htmlFor = "op-"+o.id;
+    const num = el("input"); num.type="number"; num.min="0"; num.max=String(o.max); num.step="1";
+    num.id = "op-"+o.id; num.value = stato.operatori[o.id];
+    num.addEventListener("input", () => {
+      let v = parseInt(num.value,10); if(isNaN(v)) v = 0;
+      v = Math.max(0, Math.min(o.max, v));
+      num.value = v; stato.operatori[o.id] = v; aggiornaTotale(); salva();
+    });
+    c1.append(l1, num);
+
+    const c2 = el("div","campo");
+    const l2 = el("label"); l2.textContent = "Prezzo unitario";
+    const pv = el("div","op-fisso"); pv.textContent = euro(o.prezzo);
+    c2.append(l2, pv);
+
+    righe.append(c1, c2);
+    box.append(h, righe);
+    dove.appendChild(box);
+  });
+}
+
+/* ── Totale ─────────────────────────────────────────────────── */
+function calcola(){
+  const p = pacchettoCorrente();
+  const righe = [{ etichetta:"Pacchetto " + p.nome, prezzo:p.prezzo }];
+
+  LISTINO.extra
+    .filter(e => stato.extra.has(e.id) && e.pacchetti.includes(p.id))
+    .forEach(e => righe.push({ etichetta:e.nome, prezzo:e.prezzo }));
+
+  LISTINO.operatori
+    .filter(o => p.operatori.includes(o.id) && stato.operatori[o.id] > 0)
+    .forEach(o => righe.push({
+      etichetta:`${o.nome} × ${stato.operatori[o.id]}`,
+      prezzo:o.prezzo * stato.operatori[o.id]
+    }));
+
+  LISTINO.partner
+    .filter(s => stato.partner.has(s.id))
+    .forEach(s => righe.push({ etichetta:s.nome + " (partner)", prezzo:s.prezzo }));
+
+  return { righe, totale: righe.reduce((s,r) => s + r.prezzo, 0) };
+}
+
+function aggiornaTotale(){
+  const { righe, totale } = calcola();
+  document.getElementById("totale-cifra").textContent = euro(totale);
+  document.getElementById("barra-cifra").textContent  = euro(totale);
+
+  const det = document.getElementById("totale-dettaglio");
+  det.innerHTML = "";
+  righe.forEach(r => {
+    const riga = el("div","riga");
+    const a = el("span"); a.textContent = r.etichetta;
+    const b = el("span"); b.textContent = euro(r.prezzo);
+    riga.append(a,b); det.appendChild(riga);
+  });
+
+  const aggiunte = righe.length - 1;
+  document.getElementById("barra-voci").textContent =
+    aggiunte === 0 ? "Solo pacchetto base" :
+    aggiunte === 1 ? "1 voce aggiunta" : `${aggiunte} voci aggiunte`;
+}
+
+function disegnaTutto(){
+  disegnaPacchetti();
+  disegnaExtra();
+  disegnaOperatori();
+  disegnaPartner();
+  aggiornaTotale();
+}
+
+/* ── Bozza in locale ────────────────────────────────────────── */
+function salva(){
+  try{
+    localStorage.setItem(CHIAVE, JSON.stringify({
+      pacchetto: stato.pacchetto,
+      extra: [...stato.extra],
+      partner: [...stato.partner],
+      operatori: stato.operatori,
+      dati: stato.dati
+    }));
+  }catch(e){ /* navigazione privata: si va avanti lo stesso */ }
+}
+
+function carica(){
+  let b = null;
+  try{ b = JSON.parse(localStorage.getItem(CHIAVE) || "null"); }catch(e){}
+  if(!b) return;
+  if(LISTINO.pacchetti.some(p => p.id === b.pacchetto)) stato.pacchetto = b.pacchetto;
+  (b.extra   || []).forEach(id => stato.extra.add(id));
+  (b.partner || []).forEach(id => stato.partner.add(id));
+  LISTINO.operatori.forEach(o => {
+    const v = parseInt((b.operatori || {})[o.id], 10);
+    stato.operatori[o.id] = isNaN(v) ? 0 : Math.max(0, Math.min(o.max, v));
+  });
+  stato.dati = b.dati || {};
+  LISTINO.campi.forEach(c => {
+    const i = document.getElementById("in-" + c.id);
+    if(i && stato.dati[c.id]) i.value = stato.dati[c.id];
+  });
+  potaSelezioni();
+}
+
+/* ── Verifica del modulo ────────────────────────────────────── */
+function verifica(){
+  let ok = true, primo = null;
+  LISTINO.campi.forEach(c => {
+    const box = document.getElementById("campo-" + c.id);
+    const inp = document.getElementById("in-" + c.id);
+    const err = box.querySelector(".msg-errore");
+    const val = (inp.value || "").trim();
+    let problema = "";
+
+    if(c.obb && !val) problema = "Campo obbligatorio";
+    else if(c.id === "email" && val && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) problema = "Indirizzo email non valido";
+    else if(c.id === "telefono" && val && val.replace(/\D/g,"").length < 8) problema = "Numero di telefono non valido";
+    else if(c.id === "data" && val && val < new Date().toISOString().slice(0,10)) problema = "La data è già passata";
+
+    if(problema){
+      err.textContent = problema;
+      box.classList.add("errore");
+      ok = false;
+      if(!primo) primo = inp;
+    } else {
+      box.classList.remove("errore");
+    }
+  });
+  if(primo){ primo.scrollIntoView({behavior:"smooth", block:"center"}); primo.focus({preventScroll:true}); }
+  return ok;
+}
+
+/* ── Riepilogo ──────────────────────────────────────────────── */
+function datiEvento(){
+  return LISTINO.campi
+    .map(c => {
+      const grezzo = (stato.dati[c.id] || "").trim();
+      return {
+        label: c.label.replace(" (opzionale)",""),
+        valore: c.tipo === "date" ? formattaData(grezzo) : grezzo
+      };
+    })
+    .filter(r => r.valore);
+}
+
+function apriRiepilogo(){
+  const { righe, totale } = calcola();
+  document.getElementById("riepilogo-sottotitolo").textContent =
+    `${stato.dati.sposi || ""} — ${formattaData(stato.dati.data)}`;
+
+  const dove = document.getElementById("riepilogo");
+  dove.innerHTML = "";
+
+  const h1 = el("h4"); h1.textContent = "Dati evento"; dove.appendChild(h1);
+  datiEvento().forEach(d => {
+    const r = el("div","riga");
+    const a = el("span"); a.textContent = d.label;
+    const b = el("span"); b.textContent = d.valore;
+    r.append(a,b); dove.appendChild(r);
+  });
+
+  const h2 = el("h4"); h2.textContent = "Servizio"; dove.appendChild(h2);
+  righe.forEach(x => {
+    const r = el("div","riga");
+    const a = el("span"); a.textContent = x.etichetta;
+    const b = el("span"); b.textContent = euro(x.prezzo);
+    r.append(a,b); dove.appendChild(r);
+  });
+
+  const tot = el("div","totale-riga");
+  const ta = el("span"); ta.textContent = "Totale";
+  const tb = el("span"); tb.textContent = euro(totale);
+  tot.append(ta,tb); dove.appendChild(tot);
+
+  document.getElementById("avviso").classList.remove("visibile");
+  document.getElementById("velo").classList.add("aperto");
+}
+
+function formattaData(iso){
+  if(!iso) return "";
+  const [a,m,g] = iso.split("-");
+  return `${g}/${m}/${a}`;
+}
+
+function testoRiepilogo(){
+  const { righe, totale } = calcola();
+  const L = [];
+  L.push(`RICHIESTA PREVENTIVO — ${STUDIO.nome}`);
+  L.push("");
+  L.push("DATI EVENTO");
+  datiEvento().forEach(d => L.push(`- ${d.label}: ${d.valore}`));
+  L.push("");
+  L.push("SERVIZIO");
+  righe.forEach(r => L.push(`- ${r.etichetta}: ${euro(r.prezzo)}`));
+  L.push("");
+  L.push(`TOTALE INDICATIVO: ${euro(totale)}`);
+  L.push("");
+  L.push("Prezzo indicativo, non comprensivo di eventuali promozioni o condizioni particolari.");
+  return L.join("\n");
+}
+
+/* ── Azioni ─────────────────────────────────────────────────── */
+function avvisa(testo){
+  const a = document.getElementById("avviso");
+  a.textContent = testo;
+  a.classList.add("visibile");
+}
+
+document.getElementById("modulo").addEventListener("submit", ev => {
+  ev.preventDefault();
+  if(verifica()) apriRiepilogo();
+});
+document.getElementById("barra-invia").addEventListener("click", () => {
+  document.getElementById("modulo").requestSubmit();
+});
+document.getElementById("btn-chiudi").addEventListener("click", () => {
+  document.getElementById("velo").classList.remove("aperto");
+});
+document.getElementById("velo").addEventListener("click", ev => {
+  if(ev.target.id === "velo") ev.currentTarget.classList.remove("aperto");
+});
+document.addEventListener("keydown", ev => {
+  if(ev.key === "Escape") document.getElementById("velo").classList.remove("aperto");
+});
+document.getElementById("btn-email").addEventListener("click", () => {
+  const ogg = `Richiesta preventivo — ${stato.dati.sposi || "matrimonio"} — ${formattaData(stato.dati.data)}`;
+  window.location.href =
+    `mailto:${STUDIO.email}?subject=${encodeURIComponent(ogg)}&body=${encodeURIComponent(testoRiepilogo())}`;
+  avvisa("Ho aperto il tuo programma di posta con il preventivo già scritto.");
+});
+document.getElementById("btn-copia").addEventListener("click", async () => {
+  try{
+    await navigator.clipboard.writeText(testoRiepilogo());
+    avvisa("Riepilogo copiato negli appunti.");
+  }catch(e){
+    avvisa("Copia non riuscita: usa «Scarica .txt».");
+  }
+});
+document.getElementById("btn-scarica").addEventListener("click", () => {
+  const blob = new Blob([testoRiepilogo()], {type:"text/plain;charset=utf-8"});
+  const a = el("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `preventivo-${(stato.dati.sposi || "matrimonio").replace(/[^\wÀ-ÿ]+/g,"-").toLowerCase()}.txt`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  avvisa("File scaricato.");
+});
+document.getElementById("btn-stampa").addEventListener("click", () => window.print());
+
+/* ── Avvio ──────────────────────────────────────────────────── */
+document.getElementById("marchio").textContent = STUDIO.nome;
+disegnaCampi();
+carica();
+disegnaTutto();
+</script>
+</body>
+</html>
