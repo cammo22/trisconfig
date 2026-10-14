@@ -1,5 +1,7 @@
 # Configuratore Preventivi — Foto & Video Matrimonio
 
+[![Discord](https://img.shields.io/badge/Discord-DaProd-5865F2?logo=discord&logoColor=white)](https://discord.gg/Njs52aacwq)
+
 ### ▶ [Aprilo qui: cammo22.github.io/trisconfig](https://cammo22.github.io/trisconfig/)
 
 Pagina singola, gira in qualsiasi browser. Il cliente compone il servizio del suo
